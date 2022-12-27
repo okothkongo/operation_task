@@ -4,6 +4,7 @@ defmodule OperationTask.NewCompaniesTask do
   and the data is the saved to the database.
   """
   use GenServer
+  alias OperationTask.Companies
   alias OperationTask.StockMarketProviderApi
   alias OperationTask.Util
 
@@ -14,7 +15,7 @@ defmodule OperationTask.NewCompaniesTask do
   @impl true
   def init(state) do
     timestamp = Util.current_timestamp()
-    StockMarketProviderApi.fetch_companies_data(state)
+    fetch_and_save_companies_data(state)
 
     get_next_fetch()
     {:ok, timestamp}
@@ -23,7 +24,7 @@ defmodule OperationTask.NewCompaniesTask do
   @impl true
   def handle_info(:fetch_companies_info, state) do
     timestamp = Util.current_timestamp()
-    StockMarketProviderApi.fetch_companies_data(state)
+    fetch_and_save_companies_data(state)
 
     get_next_fetch()
     {:noreply, timestamp}
@@ -31,5 +32,14 @@ defmodule OperationTask.NewCompaniesTask do
 
   defp get_next_fetch() do
     :timer.send_interval(60000 * 60 * 4, self(), :fetch_companies_info)
+  end
+
+  defp fetch_and_save_companies_data(timestamp) do
+    case StockMarketProviderApi.fetch_companies_data(timestamp) do
+      {:ok, companies} ->
+        Companies.insert_all_companies(companies)
+      error ->
+        error
+    end
   end
 end
