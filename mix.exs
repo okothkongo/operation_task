@@ -35,7 +35,8 @@ defmodule OperationTask.MixProject do
     [
       {:phoenix, "~> 1.6.15"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:tesla, "~> 1.5"}
     ]
   end
 

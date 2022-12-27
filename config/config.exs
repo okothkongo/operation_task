@@ -22,6 +22,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# enviromental variables
+config :operation_task,
+  stock_market_provider_base_url: System.get_env("Stock_Market_Provider_BASEURL")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
