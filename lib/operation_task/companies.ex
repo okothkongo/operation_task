@@ -2,6 +2,9 @@ defmodule OperationTask.Companies do
   @moduledoc """
   This module sanitize data from the api endpoint and inserts the into the db
   """
+  import Ecto.Query, only: [from: 2]
+  alias OperationTask.Repo
+  alias OperatioTask.Companies.Company
 
   @doc """
   The insert_all_companies_sync/1 function is useful for inserting multiple companies into the database in an asynchronous manner, allowing for faster performance.
@@ -14,6 +17,31 @@ defmodule OperationTask.Companies do
     |> Enum.to_list()
   end
 
+  @doc """
+   Returns a list of companies in the database
+  """
+  @spec list_companies :: list()
+  def list_companies do
+    Repo.all(Company)
+  end
+
+  def get_latest_companies(timestamp) do
+    case NaiveDateTime.from_iso8601(timestamp) do
+      {:ok, datetime} ->
+        {:ok,
+         datetime
+         |> latest_companies_query()
+         |> Repo.all()}
+
+      _error ->
+        {:error, :invalid_date_time_format}
+    end
+  end
+
+  defp latest_companies_query(timestamp) do
+    from(c in Company, where: c.inserted_at >= ^timestamp)
+  end
+
   defp prepare_data(companies) do
     companies
     |> format_data()
@@ -21,7 +49,7 @@ defmodule OperationTask.Companies do
   end
 
   defp insert_all(companies) do
-    OperationTask.Repo.insert_all("companies", companies)
+    Repo.insert_all("companies", companies)
   end
 
   defp format_data(all_companies) do

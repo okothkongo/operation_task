@@ -7,5 +7,7 @@ defmodule OperationTaskWeb.Router do
 
   scope "/api", OperationTaskWeb do
     pipe_through :api
+    get "/companies", CompanyController, :index
+    get "/companies/:timestamp", CompanyController, :new_companies
   end
 end
