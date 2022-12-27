@@ -32,7 +32,8 @@ config :operation_task, OperationTask.Mailer,
 
 # enviromental variables
 config :operation_task,
-  stock_market_provider_base_url: System.get_env("Stock_Market_Provider_BASEURL")
+  stock_market_provider_api_url: System.get_env("API_URL"),
+  stock_market_provider_websocket_url: System.get_env("WEBSOCKET_URL")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

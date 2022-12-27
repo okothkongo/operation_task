@@ -38,7 +38,7 @@ defmodule OperationTask.NewCompaniesTask do
   defp fetch_and_save_companies_data(timestamp) do
     with {:ok, companies} <- StockMarketProviderApi.fetch_companies_data(timestamp),
          [ok: {_, nil}] <- Companies.insert_all_companies(companies) do
-      Accounts.send_new_companies_email_notification(companies)
+      spawn(fn -> Accounts.send_new_companies_email_notification(companies) end)
     else
       error ->
         error
