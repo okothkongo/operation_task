@@ -1,13 +1,13 @@
 defmodule OperationTask.StockMarketProviderApi do
   @moduledoc """
-  Provide functions to interact with Mock Stock Market Provider endpiont for
+  Provide functions to interact with  Stock Market Provider HTTP API endpiont for
   listing new available companies.
   The Mock can be found at https://github.com/okothkongo/mock_stock_provider_and_client
   """
   use Tesla, only: [:get], docs: false
 
   plug Tesla.Middleware.BaseUrl,
-       Application.fetch_env!(:operation_task, :stock_market_provider_base_url)
+       Application.fetch_env!(:operation_task, :stock_market_provider_api_url)
 
   plug Tesla.Middleware.JSON
 

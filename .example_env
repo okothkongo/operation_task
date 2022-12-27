@@ -1,1 +1,2 @@
-export Stock_Market_Provider_BASEURL=
+export API_URL=
+export WEBSOCKET_URL=

@@ -39,7 +39,8 @@ defmodule OperationTask.MixProject do
       {:tesla, "~> 1.5"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
-      {:bamboo, "~> 2.2.0", override: true}
+      {:bamboo, "~> 2.2.0", override: true},
+      {:websockex, "~> 0.4.3"}
     ]
   end
 
