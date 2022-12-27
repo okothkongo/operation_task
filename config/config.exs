@@ -7,6 +7,9 @@
 # General application configuration
 import Config
 
+config :operation_task,
+  ecto_repos: [OperationTask.Repo]
+
 # Configures the endpoint
 config :operation_task, OperationTaskWeb.Endpoint,
   url: [host: "localhost"],
