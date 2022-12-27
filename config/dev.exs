@@ -3,6 +3,16 @@ import Config
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
+
+config :operation_task, OperationTask.Repo,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "operation_task_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.

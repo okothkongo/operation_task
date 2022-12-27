@@ -36,7 +36,9 @@ defmodule OperationTask.MixProject do
       {:phoenix, "~> 1.6.15"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:tesla, "~> 1.5"}
+      {:tesla, "~> 1.5"},
+      {:ecto_sql, "~> 3.6"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 
@@ -48,7 +50,9 @@ defmodule OperationTask.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"]
+      setup: ["deps.get", "ecto.setup"],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]
   end
 end
