@@ -10,6 +10,7 @@ defmodule OperationTask.Application do
     children = [
       # Start the Telemetry supervisor
       # Start the PubSub system
+      {OperationTask.NewCompaniesTask, OperationTask.Util.current_timestamp()},
       {Phoenix.PubSub, name: OperationTask.PubSub},
       # Start the Endpoint (http/https)
       OperationTaskWeb.Endpoint
