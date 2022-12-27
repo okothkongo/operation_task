@@ -38,7 +38,8 @@ defmodule OperationTask.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tesla, "~> 1.5"},
       {:ecto_sql, "~> 3.6"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:bamboo, "~> 2.2.0", override: true}
     ]
   end
 

@@ -4,6 +4,7 @@ defmodule OperationTask.NewCompaniesTask do
   and the data is the saved to the database.
   """
   use GenServer
+  alias OperationTask.Accounts
   alias OperationTask.Companies
   alias OperationTask.StockMarketProviderApi
   alias OperationTask.Util
@@ -35,9 +36,10 @@ defmodule OperationTask.NewCompaniesTask do
   end
 
   defp fetch_and_save_companies_data(timestamp) do
-    case StockMarketProviderApi.fetch_companies_data(timestamp) do
-      {:ok, companies} ->
-        Companies.insert_all_companies(companies)
+    with {:ok, companies} <- StockMarketProviderApi.fetch_companies_data(timestamp),
+         [ok: {_, nil}] <- Companies.insert_all_companies(companies) do
+      Accounts.send_new_companies_email_notification(companies)
+    else
       error ->
         error
     end
