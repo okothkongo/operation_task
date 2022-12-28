@@ -41,10 +41,11 @@ In case `api/companies/:timestamp` request is made with an invalid timestamp `42
 
 ## REST API client
 
-The rest client periodically(after every 4 hours) make requests to the stock market endpoint. Timestamp to make sure all new companies are fetched i.e companies whose timestamps are greater or equal to the time the last request was made.
+The rest client periodically(after every 4 hours) make requests to the stock market endpoint. Timestamp to make sure all new companies are fetched i.e companies whose timestamps are greater or equal to the time the last request was made.The fetched data are saved and sent to users via email notifications, these notification are sent a companany's category is among user's favorite categories(user can have more than one favorite categories).
+
 
 ## Websocket Server
-It  send push notifications to clients each time new companies are received from either the rest endpoint or WebSocket.
+It  send push notifications to clients each time new companies are received from either the rest endpoint or WebSocket and have saved in the database.
 This push are available on the endpoint  `socket/new_companies`.The pushed message will be in this format
 
 ```json
@@ -66,7 +67,7 @@ This push are available on the endpoint  `socket/new_companies`.The pushed messa
 ```
 
 ##  Websocket Client
-This receives a push notification each time there are new companies to be pushed.
+This receives a push notification each time there are new companies to be pushed.These companies are then saved and email notifications are sent users depending on wether their favorite categories are among the new companies categories.
 
 ## Dependencies
 - Erlang `25.1.2`
