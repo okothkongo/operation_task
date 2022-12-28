@@ -50,7 +50,7 @@ This push are available on the endpoint  `socket/new_companies`.The pushed messa
 
 ```json
 {
-  "data": [
+  "companies": [
     {
       "category": "Music",
       "country": "USA",
