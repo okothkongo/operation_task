@@ -32,6 +32,7 @@ defmodule OperationTaskWeb.ConnCase do
   end
 
   setup _tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(OperationTask.Repo)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
