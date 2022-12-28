@@ -14,9 +14,30 @@ The API server has two endpoints:
 
 ####  Response body 
 In case of success
-`{"data":[{"category":"Music","country":"USA","currency":"USD","inserted_at":"2022-12-28T01:57:33","name":"Collins - Purdy","stock_market":"Ergonomic","stock_price":626.77,"symbol":"Col","timestamp":"2022-12-28T00:31:11.988Z"}]`.
+```json
+{
+  "data": [
+    {
+      "category": "Music",
+      "country": "USA",
+      "currency": "USD",
+      "inserted_at": "2022-12-28T01:57:33",
+      "name": "Collins - Purdy",
+      "stock_market": "Ergonomic",
+      "stock_price": 626.77,
+      "symbol": "Col",
+      "timestamp": "2022-12-28T00:31:11.988Z"
+    }
+  ]
+}
+```
+
 In case `api/companies/:timestamp` request is made with an invalid timestamp `422` code will be returned with the body
-`{"error":"invalid_date_time_format"}`
+ ```json
+ {
+  "error": "invalid_date_time_format"
+}
+ ```
 
 ## REST API client
 
@@ -26,14 +47,30 @@ The rest client periodically(after every 4 hours) make requests to the stock mar
 It  send push notifications to clients each time new companies are received from either the rest endpoint or WebSocket.
 This push are available on the endpoint  `socket/new_companies`.The pushed message will be in this format
 
-`{"companies":[{"category":"Music","country":"USA","currency":"USD","inserted_at":"2022-12-28T01:57:33","name":"Collins - Purdy","stock_market":"Ergonomic","stock_price":626.77,"symbol":"Col","timestamp":"2022-12-28T00:31:11.988Z"}]`
+```json
+{
+  "data": [
+    {
+      "category": "Music",
+      "country": "USA",
+      "currency": "USD",
+      "inserted_at": "2022-12-28T01:57:33",
+      "name": "Collins - Purdy",
+      "stock_market": "Ergonomic",
+      "stock_price": 626.77,
+      "symbol": "Col",
+      "timestamp": "2022-12-28T00:31:11.988Z"
+    }
+  ]
+}
+```
 
 ##  Websocket Client
 This receives a push notification each time there are new companies to be pushed.
 
 ## Dependencies
 - Erlang `25.1.2`
-- Elixir  `1.4.2`
+- Elixir  `1.14.2`
 - Database: Postgres
 
 ## Installations and setting up
@@ -51,7 +88,8 @@ For erlang and elixir, you can use [asdf](https://asdf-vm.com/guide/getting-star
 
 ### Up and running 
 
-  * copy the `cp .example_env .env`.You can use [mock app]() to test locally.
+  * copy the `cp .example_env .env`.You can use [mock app](https://github.com/okothkongo/mock_stock_provider_and_client) to test locally.
+  * The load environmental variable `source .env`
   * Install dependencies with `mix setup`
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
