@@ -15,10 +15,12 @@ defmodule OperationTask.Application do
       {Phoenix.PubSub, name: OperationTask.PubSub},
       # Start the Endpoint (http/https)
       OperationTaskWeb.Endpoint
+
       # Start a worker by calling: OperationTask.Worker.start_link(arg)
       # {OperationTask.Worker, arg}
     ]
 
+    :ets.new(:companies_table, [:set, :named_table, :public])
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: OperationTask.Supervisor]

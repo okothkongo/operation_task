@@ -17,7 +17,7 @@ config :operation_task, OperationTaskWeb.Endpoint,
   server: false
 
 config :operation_task,
-  stock_market_provider_base_url: ""
+  stock_market_provider_api_url: ""
 
 # Print only warnings and errors during test
 config :logger, level: :warn
