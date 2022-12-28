@@ -70,7 +70,7 @@ This receives a push notification each time there are new companies to be pushed
 
 ## Dependencies
 - Erlang `25.1.2`
-- Elixir  `1.4.2`
+- Elixir  `1.14.2`
 - Database: Postgres
 
 ## Installations and setting up
@@ -88,7 +88,8 @@ For erlang and elixir, you can use [asdf](https://asdf-vm.com/guide/getting-star
 
 ### Up and running 
 
-  * copy the `cp .example_env .env`.You can use [mock app]() to test locally.
+  * copy the `cp .example_env .env`.You can use [mock app](https://github.com/okothkongo/mock_stock_provider_and_client) to test locally.
+  * The load environmental variable `source .env`
   * Install dependencies with `mix setup`
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
