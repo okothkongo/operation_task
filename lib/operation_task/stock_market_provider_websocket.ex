@@ -32,6 +32,7 @@ defmodule OperationTask.StockMarketProviderWebSocket do
     case Companies.insert_all_companies(companies) do
       [ok: {_, nil}] ->
         spawn(fn -> Accounts.send_new_companies_email_notification(companies) end)
+        :ets.insert(:companies_table, {"websocket_companies", companies})
         {:ok, state}
 
       _ ->

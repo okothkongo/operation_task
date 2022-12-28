@@ -39,6 +39,7 @@ defmodule OperationTask.NewCompaniesTask do
     with {:ok, companies} <- StockMarketProviderApi.fetch_companies_data(timestamp),
          [ok: {_, nil}] <- Companies.insert_all_companies(companies) do
       spawn(fn -> Accounts.send_new_companies_email_notification(companies) end)
+      :ets.insert(:companies_table, {"rest_api_companies", companies})
     else
       error ->
         error
