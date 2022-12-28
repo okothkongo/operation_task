@@ -90,8 +90,9 @@ For erlang and elixir, you can use [asdf](https://asdf-vm.com/guide/getting-star
 ### Up and running 
 
   * copy the `cp .example_env .env`.You can use [mock app](https://github.com/okothkongo/mock_stock_provider_and_client) to test locally.
-  * The load environmental variable `source .env`
+  * Load environmental variable `source .env`
   * Install dependencies with `mix setup`
+  * Run `mix run priv/repo/seeds.exs` to add users data into the db
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000/api/companies`](http://localhost:4000/api/companies) 
