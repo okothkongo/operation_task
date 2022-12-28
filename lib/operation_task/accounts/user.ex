@@ -15,5 +15,6 @@ defmodule OperationTask.Accounts.User do
     user
     |> cast(attrs, [:first_name, :last_name, :email, :fav_categories])
     |> validate_required(:email)
+    |> unique_constraint(:email)
   end
 end
