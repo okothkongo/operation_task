@@ -12,6 +12,7 @@ defmodule OperationTask.Application do
       # Start the PubSub system
       OperationTask.Repo,
       {OperationTask.NewCompaniesTask, OperationTask.Util.current_timestamp()},
+      OperationTask.StockMarketProviderWebSocket,
       {Phoenix.PubSub, name: OperationTask.PubSub},
       # Start the Endpoint (http/https)
       OperationTaskWeb.Endpoint

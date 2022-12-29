@@ -7,9 +7,8 @@ defmodule OperationTask.StockMarketProviderWebSocket do
   alias OperationTask.Companies
   alias OperationTask.Accounts
 
-  def start_link() do
+  def start_link(_) do
     websocket_url = Application.fetch_env!(:operation_task, :stock_market_provider_websocket_url)
-
     WebSockex.start_link(websocket_url, __MODULE__, nil)
   end
 
