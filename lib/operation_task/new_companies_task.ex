@@ -14,20 +14,25 @@ defmodule OperationTask.NewCompaniesTask do
   end
 
   @impl true
-  def init(state) do
+  def init(_last_fetch_timetamp) do
     timestamp = Util.current_timestamp()
-    fetch_and_save_companies_data(state)
 
     get_next_fetch()
-    {:ok, timestamp}
+
+    {:ok, timestamp, {:continue, :fetch_and_save}}
   end
 
   @impl true
-  def handle_info(:fetch_companies_info, state) do
+  def handle_info(:fetch_companies_info, _last_fetch_timetamp) do
     timestamp = Util.current_timestamp()
-    fetch_and_save_companies_data(state)
-
     get_next_fetch()
+    {:noreply, timestamp, {:continue, :fetch_and_save}}
+  end
+
+  @impl true
+  def handle_continue(:fetch_and_save, timestamp) do
+    fetch_and_save_companies_data(timestamp)
+
     {:noreply, timestamp}
   end
 
