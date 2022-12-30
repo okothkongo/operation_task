@@ -7,9 +7,10 @@ defmodule OperationTask.StockMarketProviderWebSocket do
   alias OperationTask.Companies
   alias OperationTask.Accounts
 
-  def start_link(_) do
+  def start_link(state) do
     websocket_url = Application.fetch_env!(:operation_task, :stock_market_provider_websocket_url)
-    WebSockex.start_link(websocket_url, __MODULE__, nil)
+
+    WebSockex.start_link(websocket_url, __MODULE__, state, handle_initial_conn_failure: true)
   end
 
   @impl true
@@ -20,8 +21,7 @@ defmodule OperationTask.StockMarketProviderWebSocket do
 
   @impl true
   def handle_disconnect(_conn, state) do
-    Logger.info("The server has been disconnected")
-    {:ok, state}
+    {:reconnect, state}
   end
 
   @impl true

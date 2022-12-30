@@ -10,30 +10,28 @@ defmodule OperationTask.NewCompaniesTask do
   alias OperationTask.Util
 
   def start_link(timestamp) do
-    GenServer.start_link(__MODULE__, timestamp, name: __MODULE__)
+    GenServer.start_link(__MODULE__, {timestamp, timestamp}, name: __MODULE__)
   end
 
   @impl true
-  def init(_last_fetch_timetamp) do
-    timestamp = Util.current_timestamp()
-
+  def init({last_fetch_timestamp, current_timestamp}) do
     get_next_fetch()
 
-    {:ok, timestamp, {:continue, :fetch_and_save}}
+    {:ok, {last_fetch_timestamp, current_timestamp}, {:continue, :fetch_and_save}}
   end
 
   @impl true
-  def handle_info(:fetch_companies_info, _last_fetch_timetamp) do
+  def handle_info(:fetch_companies_info, {last_fetch_timestamp, _current_timestamp}) do
     timestamp = Util.current_timestamp()
     get_next_fetch()
-    {:noreply, timestamp, {:continue, :fetch_and_save}}
+    {:noreply, {last_fetch_timestamp, timestamp}}
   end
 
   @impl true
-  def handle_continue(:fetch_and_save, timestamp) do
-    fetch_and_save_companies_data(timestamp)
+  def handle_continue(:fetch_and_save, {last_fetch_timestamp, current_timestamp}) do
+    fetch_and_save_companies_data(last_fetch_timestamp)
 
-    {:noreply, timestamp}
+    {:noreply, {current_timestamp, last_fetch_timestamp}}
   end
 
   defp get_next_fetch() do

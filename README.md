@@ -113,3 +113,4 @@ These are some assumptions made:
 ## What could be made better
 1. The first and second assumptions can be cured by adding a unique constraint to the name, therefore if a company is received contradicting this and some data is other attributes have changed it will be viewed as an update and therefore new data by design.
 2. Authencation mechanism was not implemented.
+3. Websocket is infinitly hit incase of it is not available or disconnected this create alot of overhead.
