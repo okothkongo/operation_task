@@ -52,7 +52,7 @@ defmodule OperationTask.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
+      setup: ["deps.get", "ecto.setup", "run --no-start priv/repo/seeds.#{Mix.env()}.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]
