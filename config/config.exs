@@ -35,6 +35,10 @@ config :operation_task,
   stock_market_provider_api_url: System.get_env("API_URL"),
   stock_market_provider_websocket_url: System.get_env("WEBSOCKET_URL")
 
+# websocket client 
+config :operation_task,
+  websocket_client: [OperationTask.StockMarketProviderWebSocket]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 

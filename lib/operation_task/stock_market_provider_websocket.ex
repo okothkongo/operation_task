@@ -14,17 +14,6 @@ defmodule OperationTask.StockMarketProviderWebSocket do
   end
 
   @impl true
-  def handle_connect(_conn, state) do
-    Logger.info("The connection to server is successful")
-    {:ok, state}
-  end
-
-  @impl true
-  def handle_disconnect(_conn, state) do
-    {:reconnect, state}
-  end
-
-  @impl true
   def handle_frame({:text, message}, state) do
     %{"data" => companies} = Jason.decode!(message)
 
@@ -37,5 +26,32 @@ defmodule OperationTask.StockMarketProviderWebSocket do
       _ ->
         {:ok, state}
     end
+  end
+
+  @impl true
+  def handle_disconnect(
+        %{conn: %{resp_headers: []}, reason: %{original: :econnrefused} = reason},
+        _state
+      ) do
+    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
+    exit(:normal)
+  end
+
+  @impl true
+  def handle_disconnect(%{reason: {:remote, :closed} = reason}, state) do
+    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
+    {:reconnect, state}
+  end
+
+  @impl true
+  def handle_disconnect(%{reason: reason}, state) do
+    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
+    {:reconnect, state}
+  end
+
+  @impl true
+  def handle_connect(_conn, state) do
+    Logger.info("The connection to server is successful")
+    {:ok, state}
   end
 end

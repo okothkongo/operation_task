@@ -7,19 +7,17 @@ defmodule OperationTask.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Start the Telemetry supervisor
-      # Start the PubSub system
-      OperationTask.Repo,
-      {OperationTask.NewCompaniesTask, OperationTask.Util.current_timestamp()},
-      OperationTask.StockMarketProviderWebSocket,
-      {Phoenix.PubSub, name: OperationTask.PubSub},
-      # Start the Endpoint (http/https)
-      OperationTaskWeb.Endpoint
-
-      # Start a worker by calling: OperationTask.Worker.start_link(arg)
-      # {OperationTask.Worker, arg}
-    ]
+    children =
+      [
+        OperationTask.Repo,
+        {OperationTask.NewCompaniesTask, OperationTask.Util.current_timestamp()},
+        {Phoenix.PubSub, name: OperationTask.PubSub},
+        OperationTaskWeb.Endpoint
+      ] ++
+        Application.get_env(
+          :operation_task,
+          :websocket_client
+        )
 
     :ets.new(:companies_table, [:set, :named_table, :public])
     # See https://hexdocs.pm/elixir/Supervisor.html

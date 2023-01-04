@@ -26,3 +26,6 @@ config :logger, level: :warn
 config :phoenix, :plug_init_mode, :runtime
 
 config :operation_task, OperationTask.Mailer, adapter: Bamboo.TestAdapter
+
+config :operation_task,
+  websocket_client: []
