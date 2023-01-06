@@ -33,19 +33,19 @@ defmodule OperationTask.StockMarketProviderWebSocket do
         %{conn: %{resp_headers: []}, reason: %{original: :econnrefused} = reason},
         _state
       ) do
-    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
-    exit(:normal)
+    Logger.warn(
+      "Web Socket Server is not available reason: #{inspect(reason)} there no connection was kindly ensure it availabe and restart this server"
+    )
   end
 
   @impl true
-  def handle_disconnect(%{reason: {:remote, :closed} = reason}, state) do
-    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
+  def handle_disconnect(%{reason: {:remote, :closed}}, state) do
+    Supervisor.restart_child(OperationTask.Supervisor, __MODULE__)
     {:reconnect, state}
   end
 
   @impl true
-  def handle_disconnect(%{reason: reason}, state) do
-    Logger.warn("Web Socket Server is not available #{inspect(reason)}")
+  def handle_disconnect(%{reason: _reason}, state) do
     {:reconnect, state}
   end
 
