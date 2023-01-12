@@ -1,4 +1,10 @@
 # OperationTask
+
+This application is used to automate consumpation of Stock Market Provider endpoints consisting of both REST API and Websocket endpoints.
+
+The app also provide both REST API and WebSocket endpoints for clients to consume.
+
+
 This app consists of four major components:
 1. Rest API server
 2. Rest API client
