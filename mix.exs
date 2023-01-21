@@ -20,7 +20,7 @@ defmodule OperationTask.MixProject do
   def application do
     [
       mod: {OperationTask.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :gun]
     ]
   end
 
@@ -40,7 +40,9 @@ defmodule OperationTask.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
       {:bamboo, "~> 2.2.0", override: true},
-      {:websockex, "~> 0.4.3"}
+      {:gun, "~> 1.3", override: true},
+      {:cowlib, "~> 2.12", override: true},
+      {:glock, "~> 0.1.0", override: true}
     ]
   end
 
