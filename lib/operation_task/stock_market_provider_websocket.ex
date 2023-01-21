@@ -2,56 +2,90 @@ defmodule OperationTask.StockMarketProviderWebSocket do
   @moduledoc """
   This module interacts with Stock Market Provider websocket end point, which transmit new companies as they are available.The companies are the saved in the database and notifation sent to via email.
   """
-  use WebSockex
+
+  use GenServer
   require Logger
-  alias OperationTask.Companies
+
   alias OperationTask.Accounts
+  alias OperationTask.Companies
 
-  def start_link(state) do
-    websocket_url = Application.fetch_env!(:operation_task, :stock_market_provider_websocket_url)
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
+  end
 
-    WebSockex.start_link(websocket_url, __MODULE__, state, handle_initial_conn_failure: true)
+  @server_details %{path: '/', port: 5000, host: 'localhost'}
+  @connect_opts %{
+    connect_timeout: :timer.minutes(1),
+    retry: 10,
+    retry_timeout: 100
+  }
+
+  def start_link(_state) do
+    GenServer.start_link(__MODULE__, @server_details, name: __MODULE__)
   end
 
   @impl true
-  def handle_frame({:text, message}, state) do
-    %{"data" => companies} = Jason.decode!(message)
+  def init(state) do
+    {:ok, state, {:continue, :connect}}
+  end
+
+  @impl true
+  def handle_continue(:connect, state) do
+    {:ok, gun_pid} = :gun.open(state.host, state.port, @connect_opts)
+    wait_up(state, gun_pid)
+  end
+
+  @impl true
+  def handle_continue(:upgrade, state) do
+    :gun.ws_upgrade(state.gun_pid, state.path, [])
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:gun_upgrade, _pid, _stream, _protocols, _headers}, state) do
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info(
+        {:gun_ws, _pid, _ref, {:text, data}},
+        state
+      ) do
+    %{"data" => companies} = Jason.decode!(data)
 
     case Companies.insert_all_companies(companies) do
-      [ok: {_, nil}] ->
-        spawn(fn -> Accounts.send_new_companies_email_notification(companies) end)
-        :ets.insert(:companies_table, {"websocket_companies", companies})
-        {:ok, state}
-
-      _ ->
-        {:ok, state}
+      [ok: {_, nil}] -> spawn(fn -> Accounts.send_new_companies_email_notification(companies) end)
+      _ -> nil
     end
+
+    {:noreply, state}
   end
 
   @impl true
-  def handle_disconnect(
-        %{conn: %{resp_headers: []}, reason: %{original: :econnrefused} = reason},
-        _state
-      ) do
-    Logger.warn(
-      "Web Socket Server is not available reason: #{inspect(reason)} there no connection was kindly ensure it availabe and restart this server"
-    )
+  def handle_info({:gun_down, _pid, :ws, :normal, _, _}, state) do
+    {:noreply, state}
   end
 
   @impl true
-  def handle_disconnect(%{reason: {:remote, :closed}}, state) do
-    Supervisor.restart_child(OperationTask.Supervisor, __MODULE__)
-    {:reconnect, state}
+  def handle_info({:gun_down, _pid, :ws, :closed, _, _}, state) do
+    Logger.warn("Websocket server is not available the connection has been closed")
+    {:noreply, state}
   end
 
-  @impl true
-  def handle_disconnect(%{reason: _reason}, state) do
-    {:reconnect, state}
-  end
+  defp wait_up(state, gun_pid) do
+    case :gun.await_up(gun_pid) do
+      {:ok, _} ->
+        {:noreply, Map.put(state, :gun_pid, gun_pid), {:continue, :upgrade}}
 
-  @impl true
-  def handle_connect(_conn, state) do
-    Logger.info("The connection to server is successful")
-    {:ok, state}
+      error ->
+        Logger.warn("Websocket server is not available due to #{inspect(error)}")
+        {:noreply, state}
+    end
   end
 end
