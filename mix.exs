@@ -41,8 +41,7 @@ defmodule OperationTask.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:bamboo, "~> 2.2.0", override: true},
       {:gun, "~> 1.3", override: true},
-      {:cowlib, "~> 2.12", override: true},
-      {:glock, "~> 0.1.0", override: true}
+      {:cowlib, "~> 2.12", override: true}
     ]
   end
 

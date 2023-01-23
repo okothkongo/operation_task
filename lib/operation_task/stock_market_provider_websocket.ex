@@ -19,10 +19,9 @@ defmodule OperationTask.StockMarketProviderWebSocket do
     }
   end
 
-
-  @path  Application.compile_env(:operation_task,:websocket_path)
-  @port Application.compile_env(:operation_task,:websocket_port)
-  @host  Application.compile_env(:operation_task,:websocket_host)
+  @path Application.compile_env(:operation_task, :websocket_path)
+  @port Application.compile_env(:operation_task, :websocket_port)
+  @host Application.compile_env(:operation_task, :websocket_host)
 
   @connect_opts %{
     connect_timeout: :timer.minutes(1),
@@ -93,9 +92,8 @@ defmodule OperationTask.StockMarketProviderWebSocket do
         {:noreply, state}
     end
   end
-  defp server_details do 
-   
-    %{path: to_charlist(@path), port: String.to_integer(@port) , host: to_charlist(@host)}
-  end
 
+  defp server_details do
+    %{path: to_charlist(@path), port: String.to_integer(@port), host: to_charlist(@host)}
+  end
 end
