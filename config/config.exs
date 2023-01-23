@@ -33,7 +33,9 @@ config :operation_task, OperationTask.Mailer,
 # enviromental variables
 config :operation_task,
   stock_market_provider_api_url: System.get_env("API_URL"),
-  stock_market_provider_websocket_url: System.get_env("WEBSOCKET_URL")
+  websocket_host: System.get_env("WEBSOCKET_HOST"),
+  websocket_port: System.get_env("WEBSOCKET_PORT"),
+  websocket_path: System.get_env("WEBSOCKET_PATH")
 
 # websocket client 
 config :operation_task,
