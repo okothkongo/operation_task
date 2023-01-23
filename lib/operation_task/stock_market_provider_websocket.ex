@@ -19,7 +19,11 @@ defmodule OperationTask.StockMarketProviderWebSocket do
     }
   end
 
-  @server_details %{path: '/', port: 5000, host: 'localhost'}
+
+  @path  Application.compile_env(:operation_task,:websocket_path)
+  @port Application.compile_env(:operation_task,:websocket_port)
+  @host  Application.compile_env(:operation_task,:websocket_host)
+
   @connect_opts %{
     connect_timeout: :timer.minutes(1),
     retry: 10,
@@ -27,7 +31,7 @@ defmodule OperationTask.StockMarketProviderWebSocket do
   }
 
   def start_link(_state) do
-    GenServer.start_link(__MODULE__, @server_details, name: __MODULE__)
+    GenServer.start_link(__MODULE__, server_details(), name: __MODULE__)
   end
 
   @impl true
@@ -49,6 +53,7 @@ defmodule OperationTask.StockMarketProviderWebSocket do
 
   @impl true
   def handle_info({:gun_upgrade, _pid, _stream, _protocols, _headers}, state) do
+    Logger.info("Websocket connection sucessful")
     {:noreply, state}
   end
 
@@ -88,4 +93,9 @@ defmodule OperationTask.StockMarketProviderWebSocket do
         {:noreply, state}
     end
   end
+  defp server_details do 
+   
+    %{path: to_charlist(@path), port: String.to_integer(@port) , host: to_charlist(@host)}
+  end
+
 end
